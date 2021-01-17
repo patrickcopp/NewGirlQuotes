@@ -1,0 +1,16 @@
+{
+  "name": "newgirlquotes",
+  "version": "1.0.0",
+  "description": "New Girl Quote Searching Site",
+  "main": "index.js",
+  "scripts": {
+    "debug": "nodemon --inspect index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "xmlhttprequest": "^1.8.0"
+  }
+}
