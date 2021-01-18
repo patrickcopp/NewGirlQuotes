@@ -12,7 +12,11 @@ app.get('/', (req, res) => {
   json.forEach(element => {
     if(element["script"].toLowerCase().includes(req.query.quote.toLowerCase()))
     {
-      toReturn.push(element["title"].substring(0,element["title"].length-4));
+      toReturn.push({
+        title:element["title"].substring(0,element["title"].length-4),
+        script:"THIS IS THE SCRIPT",
+        time:timeCalc(req.query.quote,element["script"])
+      });
     }
   });
   res.send(JSON.stringify(toReturn));
@@ -21,3 +25,13 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log('Listening on port '+port)
 });
+
+function timeCalc(quote,script)
+{
+  let position = script.indexOf(quote);
+  let percent = position / script.length;
+  let seconds = parseInt(percent *21*60); //minutes times episodes
+  minutes = parseInt(seconds / 60);
+  seconds = seconds % 60;
+  return minutes+":"+("0" + seconds).slice(-2);
+}
