@@ -42,13 +42,12 @@ function lastCoupleWords(script,index)
 {
   let startIndex = Math.max(0,index-100);
   let endIndex = Math.min(script.length-1,index+100);
-  while (script[startIndex]!= '.')
+  while (script[startIndex]!= '.' && startIndex < script.length)
   {
-    //console.log(script[startIndex])
     startIndex++;
   }
   startIndex++;
-  while (script[endIndex]!= '.')
+  while (script[endIndex]!= '.' && endIndex > 0)
   {
     endIndex--;
   }
