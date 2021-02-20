@@ -5,10 +5,19 @@ var cors = require('cors')
 const path = require('path')
 var json = require('./data_file.json');
 const { maxHeaderSize } = require('http');
-app.use(cors())
+var pool = require('./sql_details');
+app.use(cors());
+const {
+  performance,
+  PerformanceObserver
+} = require('perf_hooks');
 
-app.get('/', (req, res) => {
-  console.log(req.query.quote);
+app.listen(port, () => {
+  console.log('Listening on port '+port)
+});
+
+app.get('/', async(req, res) => {
+  const t0 = performance.now();
   let toReturn = [];
   json.forEach(element => {
     index = element["script"].toLowerCase().indexOf(req.query.quote.toLowerCase());
@@ -21,12 +30,11 @@ app.get('/', (req, res) => {
       });
     }
   });
+  const time = performance.now() - t0;
+
+  const result = await pool.execute("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.socket.remoteAddress,time]);
   res.setHeader('content-type', 'text/json');
   res.send(JSON.stringify(toReturn));
-});
-
-app.listen(port, () => {
-  console.log('Listening on port '+port)
 });
 
 function timeCalc(index,script)
