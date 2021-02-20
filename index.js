@@ -32,7 +32,7 @@ app.get('/', async(req, res) => {
   });
   const time = performance.now() - t0;
 
-  const result = await pool.execute("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.socket.remoteAddress,time]);
+  pool.query("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.socket.remoteAddress,time]);
   res.setHeader('content-type', 'text/json');
   res.send(JSON.stringify(toReturn));
 });
