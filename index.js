@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express();
-const port = 8000;
+const port = 80;
 var cors = require('cors')
 const path = require('path')
 var json = require('./data_file.json');
@@ -32,7 +32,7 @@ app.get('/', async(req, res) => {
   });
   const time = performance.now() - t0;
 
-  await pool.query("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.socket.remoteAddress.replace(/^.*:/, ''),time]);
+  await pool.query("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.headers['x-forwarded-for'],time]);
   res.setHeader('content-type', 'text/json');
   res.send(JSON.stringify(toReturn));
 });
