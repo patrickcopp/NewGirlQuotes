@@ -6,11 +6,20 @@ const path = require('path')
 var json = require('./data_file.json');
 const { maxHeaderSize } = require('http');
 var pool = require('./sql_details');
-app.use(cors());
+const rateLimit = require("express-rate-limit");
+
 const {
   performance,
   PerformanceObserver
 } = require('perf_hooks');
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 40
+});
+
+app.use(limiter);
+app.use(cors());
 
 app.listen(port, () => {
   console.log('Listening on port '+port)
