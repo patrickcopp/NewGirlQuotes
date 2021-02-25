@@ -25,7 +25,7 @@ app.get('/', async(req, res) => {
     {
       toReturn.push({
         title:element["title"].substring(0,element["title"].length-4),
-        script:lastCoupleWords(element["script"],index),
+        script:lastCoupleWords(element["script"],index,req.query.quote),
         time:timeCalc(index,element["script"])
       });
     }
@@ -46,7 +46,7 @@ function timeCalc(index,script)
   return minutes+":"+("0" + seconds).slice(-2);
 }
 
-function lastCoupleWords(script,index)
+function lastCoupleWords(script,index,quote)
 {
   let startIndex = Math.max(0,index-100);
   let endIndex = Math.min(script.length-1,index+100);
@@ -54,12 +54,12 @@ function lastCoupleWords(script,index)
   {
     startIndex++;
   }
-  startIndex++;
+  startIndex += 2;
   while (script[endIndex]!= '.' && endIndex > 0)
   {
     endIndex--;
   }
   endIndex++;
 
-  return script.substring(Math.min(startIndex,index),Math.max(endIndex));
+  return script.substring(Math.min(startIndex,index),Math.max(endIndex,index+quote.length));
 }
