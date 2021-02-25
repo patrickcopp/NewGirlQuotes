@@ -1,16 +1,25 @@
 const express = require('express')
 const app = express();
-const port = 8000;
+const port = 80;
 var cors = require('cors')
 const path = require('path')
 var json = require('./data_file.json');
 const { maxHeaderSize } = require('http');
 var pool = require('./sql_details');
-app.use(cors());
+const rateLimit = require("express-rate-limit");
+
 const {
   performance,
   PerformanceObserver
 } = require('perf_hooks');
+
+const limiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: 40
+});
+
+app.use(limiter);
+app.use(cors());
 
 app.listen(port, () => {
   console.log('Listening on port '+port)
@@ -32,7 +41,7 @@ app.get('/', async(req, res) => {
   });
   const time = performance.now() - t0;
 
-  await pool.query("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.socket.remoteAddress.replace(/^.*:/, ''),time]);
+  await pool.query("INSERT INTO LOGGING (IP,RES_TIME) VALUES (?,?)",[req.headers['x-forwarded-for'],time]);
   res.setHeader('content-type', 'text/json');
   res.send(JSON.stringify(toReturn));
 });
