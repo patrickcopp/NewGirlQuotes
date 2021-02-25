@@ -15,7 +15,10 @@ const {
 
 const limiter = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 40
+  max: 40,
+  keyGenerator: function(req, res) {
+    return req.headers['x-forwarded-for'];
+  }
 });
 
 app.use(limiter);
